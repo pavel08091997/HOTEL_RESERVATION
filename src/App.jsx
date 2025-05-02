@@ -27,7 +27,7 @@ export const App = () => {
 				</Routes>
 			</Content>
 			<Footer />
-			</AppColumn>
+		</AppColumn>
 	);
 };
 

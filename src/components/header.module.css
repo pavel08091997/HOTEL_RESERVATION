@@ -2,24 +2,10 @@
 	height: 100px;
 	justify-content: space-between;
 	padding: 0 20px;
+	padding: 20px 40px;
+	box-shadow: 0px -2px 10px black;
+	position: fixed;
+	top: 0;
+	width: 1000px;
+	background-color: rgb(214, 240, 247);
 }
-
-.largetText {
-	font-size: 32px;
-	font-weight: bold;
-}
-
-.smallText {
-	font-size: 18px;
-	font-weight: bold;
-}
-
-.authButton {
-	background-color: #007bff; /* Цвет фона */
-	color: white; /* Цвет текста */
-	padding: 10px 20px; /* Отступы */
-	border: none; /* Убираем рамку */
-	border-radius: 5px; /* Закругленные углы */
-	text-decoration: none; /* Убираем подчеркивание */
-	display: inline-block; /* Чтобы элемент вёл себя как кнопка */
-  }

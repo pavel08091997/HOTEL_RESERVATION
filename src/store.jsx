@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { thunk } from 'redux-thunk';
-import {userReducer} from './reducers/userReducer'
+import { userReducer } from './reducers/userReducer';
 import { usersReducer } from './reducers/usersReducer';
 import { hotelList } from './reducers/hotelListReducer';
 import { specificHotel } from './reducers/specificHotelReducer';

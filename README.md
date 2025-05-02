@@ -27,7 +27,7 @@
 - сессия тек пользователя: login/ password / role
 
 Схема для редакс сторе на клиенте:
-- user : id / login / roleId
+- user : id / login / roleId /session
 -hotelList: массив отелей: id / addres / reiting / price / ImageUrl /
 - specificHotel: id / addres / reiting / price / description / ImageUrl /comments: id/autor/pablishADD
 
