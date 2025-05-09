@@ -6,9 +6,15 @@
 			"password": "qwerty123",
 			"regisred_at": "2025-10-08",
 			"role_id": 1
+		},
+		{
+			"login": "testuser",
+			"password": "password123",
+			"regisred_at": "2023-10-01T12:00:00Z",
+			"role_id": 1,
+			"id": "Z86KzFD"
 		}
 	],
-
 	"role": [
 		{
 			"id": 0,
@@ -19,7 +25,6 @@
 			"name": "Администратор"
 		}
 	],
-
 	"cheeckList": [
 		{
 			"id": 11,

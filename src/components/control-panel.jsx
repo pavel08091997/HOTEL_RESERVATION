@@ -1,17 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { ROLE } from '../roles/roles';
+import { ROLE } from '../roles';
 import { useSelector } from 'react-redux';
-import { selectUserRole } from '../selectors/select-user-role';
-import { selectUserLogin } from '../selectors/select-user-login';
-import { selectUserSession } from '../selectors/select-User-Session';
+import { selectUserRole, selectUserLogin, selectUserSession } from '../selectors';
 import { useDispatch } from 'react-redux';
-import { logout } from '../actions/action-logout';
+import { logout } from '../actions';
 
 const RightAligned = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	text-decoration: none;
+	cursor: pointer;
 `;
 
 const ControlPanelConteiner = ({ className }) => {
@@ -22,25 +21,23 @@ const ControlPanelConteiner = ({ className }) => {
 	const session = useSelector(selectUserSession);
 	const dispatch = useDispatch();
 
-	// Логи для проверки значений
-	console.log('Role ID:', roleId);
-	console.log('User Login:', login);
-	console.log('Session:', session);
-
 	return (
 		<RightAligned>
-			<button>
-				{roleId === ROLE.GUEST ? (
+			{roleId === ROLE.GUEST ? (
+				<button>
 					<Link to="/login" className={className}>
 						Войти
 					</Link>
-				) : (
-					<>
-						<div>{login}</div>
-						<div onClick={() => dispatch(logout(session))}></div>
-					</>
-				)}
-			</button>
+				</button>
+			) : (
+				<>
+					<div>{login}</div>
+					<i
+						className="fa-solid fa-right-from-bracket"
+						onClick={() => dispatch(logout(session))}
+					></i>
+				</>
+			)}
 
 			<i className="fa-solid fa-backward" onClick={() => naiigate(-1)}></i>
 		</RightAligned>

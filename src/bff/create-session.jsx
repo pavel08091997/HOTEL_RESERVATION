@@ -3,6 +3,7 @@ import { ROLE } from '../roles/roles';
 
 export const createSession = (roleId) => {
 	const session = {
+		//удаляем все свойства и завершаем сессию
 		logout() {
 			Object.keys(session).forEach((key) => {
 				delete session[key];

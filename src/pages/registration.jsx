@@ -2,10 +2,13 @@ import styles from './autorization.module.css';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { server } from '../bff/server';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../actions/set-user';
+import { server } from '../bff';
+import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useStore, useSelector } from 'react-redux';
+import { setUser } from '../actions';
+import { selectUserRole } from '../selectors';
+import { ROLE } from '../roles';
 
 const regFormShema = yup.object().shape({
 	login: yup
@@ -27,6 +30,7 @@ export const Registration = () => {
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -45,17 +49,37 @@ export const Registration = () => {
 	const ErrorMessage = formErrorMessage || errorServer;
 
 	const dispatch = useDispatch();
+	const roleId = useSelector(selectUserRole);
+	const store = useStore();
+
+	useEffect(() => {
+		let currentWasLogout = store.getState().app.wasLogout;
+
+		return store.subscribe(() => {
+			let prevwiosWasLogout = currentWasLogout;
+			currentWasLogout = store.getState().app.wasLogout;
+
+			if (currentWasLogout !== prevwiosWasLogout) {
+				reset();
+			}
+		});
+	}, [reset, store]);
+
+	if (roleId !== ROLE.GUEST) {
+		return <Navigate to="/" />;
+	}
 
 	const formServer = ({ login, password }) => {
 		server.register(login, password).then(({ error, res }) => {
+			console.log(res);
 			if (error) {
 				setServerError(`Ошибка запроса: ${error}`);
 				return;
 			}
 			dispatch(setUser(res));
+			reset();
 		});
 	};
-
 
 	return (
 		<div>
@@ -70,13 +94,11 @@ export const Registration = () => {
 					type="password"
 					{...register('password')}
 					placeholder="Введите пароль"
-					autoComplete="current-password"
 				/>
 				<input
 					type="password"
 					{...register('passcheck')}
 					placeholder="Повторите пароль"
-					autoComplete="current-password"
 				/>
 				<button type="submit" disabled={!!formErrorMessage}>
 					Регистрация
