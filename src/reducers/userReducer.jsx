@@ -4,7 +4,7 @@ import { ROLE } from '../roles/roles';
 const intialUserState = {
 	id: null,
 	login: null,
-	roleId: ROLE.GUEST,
+	roleId: ROLE.CLIENT,
 	session: null,
 };
 

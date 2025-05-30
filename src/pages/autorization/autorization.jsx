@@ -1,16 +1,17 @@
-import styles from './autorization.module.css';
+import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { server } from '../bff';
-import { Navigate } from 'react-router-dom';
+import { server } from '../../bff';
+import { Link, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore, useSelector } from 'react-redux';
-import { setUser } from '../actions';
-import { selectUserRole } from '../selectors';
-import { ROLE } from '../roles';
+import { setUser } from '../../actions';
+import { selectUserRole } from '../../selectors/select-user-role';
+import { ROLE } from '../../roles';
+import { Input, H2, Button } from '../../components';
 
-const regFormShema = yup.object().shape({
+const authFormShema = yup.object().shape({
 	login: yup
 		.string()
 		.required('Введите логин')
@@ -23,33 +24,46 @@ const regFormShema = yup.object().shape({
 		.matches(/^[\w_]*$/, 'Должны использоваться, цифры, буквы и нижние подчеркивания')
 		.min(3, 'Должно быть не меньше 3 символов')
 		.max(15, 'Должно быть не более 15 символов'),
-	passcheck: yup.string().oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
 });
 
-export const Registration = () => {
+const StyledAuth = styled.form`
+	display: inline-grid;
+	gap: 3px;
+`;
+
+const StyledLink = styled(Link)`
+    color: black;
+    padding: 10px;
+    font-size: 18px;
+}`;
+
+const ErrorMessage = styled.div`
+	background-color: pink;
+`;
+
+export const Authorization = () => {
 	const {
 		register,
-		handleSubmit,
 		reset,
+		handleSubmit,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
 			login: '',
 			password: '',
-			passcheck: '',
 		},
-		resolver: yupResolver(regFormShema),
+		resolver: yupResolver(authFormShema),
 	});
 
 	const [errorServer, setServerError] = useState(null);
 
-	const formErrorMessage =
-		errors.login?.message || errors.password?.message || errors.passcheck?.message;
+	const roleId = useSelector(selectUserRole);
 
-	const ErrorMessage = formErrorMessage || errorServer;
+	const formErrorMessage = errors.login?.message || errors.password?.message;
+
+	const errorMessage = formErrorMessage || errorServer;
 
 	const dispatch = useDispatch();
-	const roleId = useSelector(selectUserRole);
 	const store = useStore();
 
 	useEffect(() => {
@@ -65,46 +79,42 @@ export const Registration = () => {
 		});
 	}, [reset, store]);
 
-	if (roleId !== ROLE.GUEST) {
+	if (roleId !== ROLE.CLIENT) {
 		return <Navigate to="/" />;
 	}
 
 	const formServer = ({ login, password }) => {
-		server.register(login, password).then(({ error, res }) => {
-			console.log(res);
+		server.authorize(login, password).then(({ error, res }) => {
 			if (error) {
 				setServerError(`Ошибка запроса: ${error}`);
 				return;
 			}
 			dispatch(setUser(res));
-			reset();
 		});
 	};
 
 	return (
 		<div>
-			<form className={styles.authForm} onSubmit={handleSubmit(formServer)}>
-				<input
+			<H2> Авторизация</H2>
+			<StyledAuth onSubmit={handleSubmit(formServer)}>
+				<Input
 					type="text"
-					{...register('login')}
+					{...register('login', { onChange: () => setServerError(null) })}
 					placeholder="Введите логин"
 					autoComplete="username"
 				/>
-				<input
+				<Input
 					type="password"
-					{...register('password')}
+					{...register('password', { onChange: () => setServerError(null) })}
 					placeholder="Введите пароль"
+					autoComplete="current-password"
 				/>
-				<input
-					type="password"
-					{...register('passcheck')}
-					placeholder="Повторите пароль"
-				/>
-				<button type="submit" disabled={!!formErrorMessage}>
-					Регистрация
-				</button>
-				{formErrorMessage && <div>{formErrorMessage}</div>}
-			</form>
+				<Button type="submit" disabled={!!formErrorMessage}>
+					Авторизация
+				</Button>
+				<StyledLink to="/reg"> Регистрация</StyledLink>
+				{errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+			</StyledAuth>
 		</div>
 	);
 };

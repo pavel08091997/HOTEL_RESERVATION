@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectUserRole, selectUserLogin, selectUserSession } from '../selectors';
 import { useDispatch } from 'react-redux';
 import { logout } from '../actions';
+import { Button } from './button';
 
 const RightAligned = styled.div`
 	display: flex;
@@ -13,6 +14,7 @@ const RightAligned = styled.div`
 	cursor: pointer;
 `;
 
+// eslint-disable-next-line react/prop-types
 const ControlPanelConteiner = ({ className }) => {
 	const naiigate = useNavigate();
 
@@ -23,12 +25,12 @@ const ControlPanelConteiner = ({ className }) => {
 
 	return (
 		<RightAligned>
-			{roleId === ROLE.GUEST ? (
-				<button>
+			{roleId === ROLE.CLIENT ? (
+				<Button>
 					<Link to="/login" className={className}>
 						Войти
 					</Link>
-				</button>
+				</Button>
 			) : (
 				<>
 					<div>{login}</div>
@@ -38,10 +40,19 @@ const ControlPanelConteiner = ({ className }) => {
 					></i>
 				</>
 			)}
+			<Link
+				to="/users"
+				className="fa-solid fa-users fa-flip-horizontal"
+				aria-hidden="true"
+				style={{ fontSize: '20px', color: 'black', padding: '0 20px 20px 20px' }}
+			></Link>
 
 			<i className="fa-solid fa-backward" onClick={() => naiigate(-1)}></i>
 		</RightAligned>
 	);
 };
 
-export const ControlPanel = styled(ControlPanelConteiner)``;
+export const ControlPanel = styled(ControlPanelConteiner)`
+	color: black;
+	text-decoration: none;
+`;

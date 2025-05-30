@@ -1,16 +1,17 @@
-import styles from './autorization.module.css';
+import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { server } from '../bff'
-import { Link, Navigate } from 'react-router-dom';
+import { server } from '../../bff';
+import { Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore, useSelector } from 'react-redux';
-import { setUser } from '../actions';
-import { selectUserRole } from '../selectors/select-user-role';
-import { ROLE } from '../roles';
+import { setUser } from '../../actions';
+import { selectUserRole } from '../../selectors/select-user-role';
+import { ROLE } from '../../roles';
+import { Input, H2, Button } from '../../components';
 
-const authFormShema = yup.object().shape({
+const regFormShema = yup.object().shape({
 	login: yup
 		.string()
 		.required('Введите логин')
@@ -23,9 +24,22 @@ const authFormShema = yup.object().shape({
 		.matches(/^[\w_]*$/, 'Должны использоваться, цифры, буквы и нижние подчеркивания')
 		.min(3, 'Должно быть не меньше 3 символов')
 		.max(15, 'Должно быть не более 15 символов'),
+	passcheck: yup
+		.string()
+		.oneOf([yup.ref('password'), null], 'Пароли не совпадают')
+		.required('Поле обязательно для заполнения'),
 });
 
-export const Authorization = () => {
+const StyledAuth = styled.form`
+	display: inline-grid;
+	gap: 3px;
+`;
+
+const ErrorMessage = styled.div`
+	background-color: pink;
+`;
+
+export const Registration = () => {
 	const {
 		register,
 		reset,
@@ -35,15 +49,19 @@ export const Authorization = () => {
 		defaultValues: {
 			login: '',
 			password: '',
+			passcheck: '',
 		},
-		resolver: yupResolver(authFormShema),
+		resolver: yupResolver(regFormShema),
 	});
 
 	const [errorServer, setServerError] = useState(null);
 
 	const roleId = useSelector(selectUserRole);
 
-	const formErrorMessage = errors.login?.message || errors.password?.message;
+	const formErrorMessage =
+		errors.login?.message || errors.password?.message || errors.passcheck?.message;
+
+	const errorMessage = formErrorMessage || errorServer;
 
 	const dispatch = useDispatch();
 	const store = useStore();
@@ -61,13 +79,12 @@ export const Authorization = () => {
 		});
 	}, [reset, store]);
 
-	if (roleId !== ROLE.GUEST) {
+	if (roleId !== ROLE.CLIENT) {
 		return <Navigate to="/" />;
 	}
 
 	const formServer = ({ login, password }) => {
-		server.autorize(login, password).then(({ error, res }) => {
-
+		server.register(login, password).then(({ error, res }) => {
 			if (error) {
 				setServerError(`Ошибка запроса: ${error}`);
 				return;
@@ -78,25 +95,31 @@ export const Authorization = () => {
 
 	return (
 		<div>
-			<form className={styles.authForm} onSubmit={handleSubmit(formServer)}>
-				<input
+			<H2> Регистрация</H2>
+			<StyledAuth onSubmit={handleSubmit(formServer)}>
+				<Input
 					type="text"
-					{...register('login')}
+					{...register('login', { onChange: () => setServerError(null) })}
 					placeholder="Введите логин"
 					autoComplete="username"
 				/>
-				<input
+				<Input
 					type="password"
-					{...register('password')}
+					{...register('password', { onChange: () => setServerError(null) })}
 					placeholder="Введите пароль"
 					autoComplete="current-password"
 				/>
-				<button type="submit" disabled={!!formErrorMessage}>
-					Авторизация
-				</button>
-				<Link to="/reg"> Регистрация</Link>
-				{formErrorMessage && <div>{formErrorMessage}</div>}
-			</form>
+				<Input
+					type="password"
+					{...register('passcheck', { onChange: () => setServerError(null) })}
+					placeholder="Повторите пароль"
+					autoComplete="current-password"
+				/>
+				<Button type="submit" disabled={!!formErrorMessage}>
+					Регистрация
+				</Button>
+				{errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+			</StyledAuth>
 		</div>
 	);
 };
