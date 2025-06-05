@@ -1,2 +1,2 @@
 /* eslint-disable react-refresh/only-export-components */
-export * from './use-server'
+export * from './use-server.jsx'

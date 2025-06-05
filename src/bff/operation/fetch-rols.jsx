@@ -1,6 +1,6 @@
-import { sessions } from '../sessions';
-import { getRols } from '../api';
-import { ROLE } from '../roles-server';
+import { sessions } from '../sessions.jsx';
+import { getRols } from '../api/index.jsx';
+import { ROLE } from '../roles-server/index.jsx';
 
 export const fetchRols = async (userSession) => {
 	const accessRoles = [ROLE.ADMIN];

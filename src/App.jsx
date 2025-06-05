@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Header, Footer, Page } from './components';
 import { Authorization } from './pages/autorization/autorization';
 import { Registration } from './pages/registration/registration';
-import { Users } from './pages/users/users';
+import	 {Users} from './pages/users/users';
 import { RoomStatus } from './pages/room-details/room-status';
 import { AppColumn } from './app.column';
 

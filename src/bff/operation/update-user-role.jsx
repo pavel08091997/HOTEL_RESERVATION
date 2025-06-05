@@ -1,20 +1,35 @@
-import { setUserRole } from '../api/set-user-role';
-import { sessions } from '../sessions';
-import { ROLE } from '../../roles';
+import { setUserRole } from '../api/set-user-role.jsx';
+import { sessions } from '../sessions.jsx';
+import { ROLE } from '../../roles/index.jsx';
+
 
 export const updateUserRole = async (userId, newUserRoleId, userSession) => {
-	const accessRoles = [ROLE.ADMIN];
+  console.log('updateUserRole вызвана с:', { userId, newUserRoleId, userSession });
 
-	if (!sessions.access(userSession, accessRoles)) {
-		return {
-			error: 'Доступ запрещен',
-			res: null,
-		};
-	}
-	setUserRole(userId, newUserRoleId);
+  const accessRoles = [ROLE.ADMIN];
 
-	return {
-		error: null,
-		res: true,
-	};
+  if (!sessions.access(userSession, accessRoles)) {
+    console.log('Доступ запрещен для сессии:', userSession);
+    return {
+      error: 'Доступ запрещен',
+      res: null,
+    };
+  }
+  try {
+    console.log('Вызываем setUserRole...');
+    await setUserRole(userId, newUserRoleId);
+    console.log('setUserRole успешно выполнена');
+
+    return {
+      error: null,
+      res: true,
+    };
+  } catch (error) {
+    console.error('Ошибка при обновлении роли пользователя:', error);
+    return {
+      error: 'Ошибка приобновлении роли пользователя',
+      res: null,
+    };
+  }
 };
+

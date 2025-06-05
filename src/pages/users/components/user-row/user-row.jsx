@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import styled from 'styled-components';
-import { useServerRequest } from '../../../../components/hook';
+import { useServerRequest } from '../../../../components/hook/use-server.jsx';
 import { useState } from 'react';
 
 const UserRowConteiner = ({
@@ -10,8 +10,8 @@ const UserRowConteiner = ({
 	registeredAt,
 	roleId: userRoleId,
 	role,
+	onUserRemove,
 }) => {
-	
 	const [initialRoleId, setInitialRoleId] = useState(userRoleId);
 
 	const [selectedRols, setSelectedRols] = useState(userRoleId);
@@ -20,7 +20,7 @@ const UserRowConteiner = ({
 
 	const onRoleSave = (userId, newUserRoleId) => {
 		requestServer('updateUserRole', userId, newUserRoleId).then(() => {
-			console.log(`Сохранение роли:${userId},${newUserRoleId}`)
+			console.log(`Сохранение роли:${userId},${newUserRoleId}`);
 			setInitialRoleId(newUserRoleId);
 		});
 	};
@@ -48,7 +48,7 @@ const UserRowConteiner = ({
 					onClick={() => onRoleSave(id, selectedRols)}
 				></i>
 			</div>
-			<i className="fa-solid fa-trash-can"></i>
+			<i className="fa-solid fa-trash-can" onClick={onUserRemove}></i>
 		</div>
 	);
 };

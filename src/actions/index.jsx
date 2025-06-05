@@ -1,4 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-export * from './action-logout';
-export * from './action-type';
-export * from './set-user';
+export * from './action-logout.jsx';
+export * from './action-type.jsx';
+export * from './set-user.jsx';

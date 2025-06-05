@@ -4,16 +4,18 @@ import styled from 'styled-components';
 import { useServerRequest } from '../../components/hook';
 import { useEffect, useState } from 'react';
 
-
 // eslint-disable-next-line react/prop-types
 const UsersConteiner = ({ className }) => {
 	const [role, setRols] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [errorMessage, setErrorMessage] = useState(null);
+	const [shouldUpdateUserList, setShouldUpdateUserList] = useState(false);
+	console.log('shouldUpdateUserList', shouldUpdateUserList)
 
 	const requestServer = useServerRequest();
 
 	useEffect(() => {
+		console.log('useEffect')
 		const fetchData = async () => {
 			try {
 				const userRes = await requestServer('fetchUsers');
@@ -34,7 +36,15 @@ const UsersConteiner = ({ className }) => {
 			}
 		};
 		fetchData();
-	}, [requestServer]);
+	}, [requestServer, shouldUpdateUserList]);
+
+	const onUserRemove = (userId) => {
+		console.log('onUserRemove', userId)
+		requestServer('removeUser', userId).then(() => {
+			console.log('requestServer then')
+			setShouldUpdateUserList(!shouldUpdateUserList);
+		});
+	};
 
 	return (
 		<div className={className}>
@@ -53,6 +63,7 @@ const UsersConteiner = ({ className }) => {
 							registeredAt={registeredAt}
 							roleId={roleId}
 							role={role}
+							onUserRemove={()=> onUserRemove(id)}
 						/>
 					);
 				})}

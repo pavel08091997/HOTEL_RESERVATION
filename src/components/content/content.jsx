@@ -1,4 +1,4 @@
-import { H2 } from '../H2-conteiner';
+import { H2 } from '../H2-conteiner.jsx';
 import styled from 'styled-components';
 
 const Div = styled.div`

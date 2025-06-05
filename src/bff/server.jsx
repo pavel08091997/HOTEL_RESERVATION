@@ -1,5 +1,15 @@
-import { logout, fetchRols, fetchUsers, authorize, register } from './operation/';
-import { updateUserRole } from './operation/update-user-role';
+import {
+	logout,
+	fetchRols,
+	fetchUsers,
+	authorize,
+	register,
+	removeUser,
+} from './operation/index.jsx';
+import { updateUserRole } from './operation/update-user-role.jsx';
+
+
+
 
 export const server = {
 	authorize,
@@ -8,4 +18,5 @@ export const server = {
 	fetchRols,
 	fetchUsers,
 	updateUserRole,
+	removeUser,
 };

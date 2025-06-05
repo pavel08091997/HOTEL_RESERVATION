@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useCallback } from 'react';
-import { selectUserSession } from '../../selectors';
-import { server } from '../../bff/server';
+import { selectUserSession } from '../../selectors/index.jsx';
+import { server } from '../../bff/server.jsx';
 
 export const useServerRequest = () => {
 	const session = useSelector(selectUserSession);

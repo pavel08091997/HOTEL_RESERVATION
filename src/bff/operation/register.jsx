@@ -1,5 +1,5 @@
-import { sessions } from '../sessions';
-import { getUser,addUser } from '../api';
+import { sessions } from '../sessions.jsx';
+import { getUser,addUser } from '../api/index.jsx';
 
 // Регистрация, теперь от обратного
 export const register = async (regLogin, regPassword) => {

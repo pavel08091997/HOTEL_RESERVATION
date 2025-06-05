@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { server } from '../../bff';
+import { server } from '../../bff/server.jsx';
 import { Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore, useSelector } from 'react-redux';
-import { setUser } from '../../actions';
-import { selectUserRole } from '../../selectors/select-user-role';
-import { ROLE } from '../../roles';
-import { Input, H2, Button } from '../../components';
+import { setUser } from '../../actions/index.jsx';
+import { selectUserRole } from '../../selectors/select-user-role.jsx';
+import { ROLE } from '../../roles/index.jsx';
+import { Input, H2, Button } from '../../components/index.jsx';
 
 const regFormShema = yup.object().shape({
 	login: yup
